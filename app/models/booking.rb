@@ -1,4 +1,5 @@
 class Booking < ApplicationRecord
+  has_many :refunds
   belongs_to :customer
   belongs_to :workshop
 
@@ -8,10 +9,14 @@ class Booking < ApplicationRecord
   after_create :update_workshop_sit_count
 
   def update_workshop_sit_count
-    workshop.update(remaining_sits: workshop.total_sits - workshop.remaining_sits + no_of_tickets)
+    workshop.update(remaining_sits: workshop.remaining_sits - no_of_tickets)
   end
 
   def generate_order_number
     self.order_number = "BOOKING-#{SecureRandom.hex(5).upcase}"
+  end
+
+  def is_refundable?
+    workshop.start_date > Date.today
   end
 end
