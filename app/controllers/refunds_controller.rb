@@ -40,6 +40,8 @@ class RefundsController < ApplicationController
   end
 
   def refund_acceptance
+    @accepted_refunds = Refund.accepted_refunds(@booking.id)
+    @successful_refunds = Refund.successful_refunds(@booking.id)
   end
 
   private
